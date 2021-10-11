@@ -6,6 +6,7 @@ import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { QueryUserDto } from './dtos/query-user.dto';
 import { PaginateResponse } from '../global/interfaces/paginate.interface';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -51,12 +52,17 @@ export class UserService {
     if (user)
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
 
-    const newUser = new this.model({
-      ...registerUser,
-      createdAt: new Date(),
-    });
+    const newUser = new this.model(registerUser);
     newUser.password = await bcrypt.hash(registerUser.password, 10);
 
     return await newUser.save();
+  }
+
+  async remove(id: string): Promise<User> {
+    return this.model.findByIdAndRemove(id);
+  }
+
+  async update(id: string, payload: UpdateUserDto) {
+    return this.model.findByIdAndUpdate(id, payload, { new: true });
   }
 }
