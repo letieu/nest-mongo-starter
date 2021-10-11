@@ -8,7 +8,7 @@ import { TypegooseModule } from 'nestjs-typegoose';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypegooseModule.forRoot(process.env.MONGO),
     UserModule,
     AuthModule,

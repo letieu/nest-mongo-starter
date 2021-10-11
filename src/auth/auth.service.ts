@@ -11,12 +11,14 @@ import { ResetToken } from './schemas/resetToken.schema';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectModel } from 'nestjs-typegoose';
 import { ResetPasswordDto } from '../user/dtos/reset-password.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
     @InjectModel(ResetToken)
     private readonly tokenModel: ReturnModelType<typeof ResetToken>,
   ) {}
@@ -61,7 +63,7 @@ export class AuthService {
     return user;
   }
 
-  async resetRequest(email: string): Promise<string> {
+  async resetRequest(email: string) {
     const user = await this.usersService.findOneByEmail(email);
 
     if (!user)
@@ -77,8 +79,9 @@ export class AuthService {
       createdAt: Date.now(),
     }).save();
 
-    const link = `/passwordReset?token=${resetToken}&id=${user.id}`;
-    return link;
+    const domain = this.configService.get<string>('FRONTEND_URL');
+    const link = `${domain}/passwordReset?token=${resetToken}&id=${user.id}`;
+    //TODO: send email
   }
 
   async resetPassword(payload: ResetPasswordDto) {

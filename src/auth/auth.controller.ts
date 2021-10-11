@@ -32,12 +32,13 @@ export class AuthController {
 
   @Post('reset_request')
   async requestReset(@Body() payload: ResetRequestDto) {
-    return await this.service.resetRequest(payload.email);
+    await this.service.resetRequest(payload.email);
+    return 'Email was sent';
   }
 
   @Post('reset_password')
   async resetPassword(@Body() payload: ResetPasswordDto) {
     await this.service.resetPassword(payload);
-    return 'Password is changed';
+    return 'Reset password successfully';
   }
 }
