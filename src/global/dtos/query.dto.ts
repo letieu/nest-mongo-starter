@@ -12,9 +12,9 @@ export class QueryDto {
   page = 0;
 
   @IsOptional()
-  sortBy: string;
+  sortBy = 'createdAt';
 
   @IsOptional()
   @IsIn(['desc', 'asc'])
-  sortType: string;
+  sortType = 'desc';
 }

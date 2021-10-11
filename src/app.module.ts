@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypegooseModule } from 'nestjs-typegoose';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TypegooseModule } from 'nestjs-typegoose';
     TypegooseModule.forRoot(process.env.MONGO),
     UserModule,
     AuthModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
