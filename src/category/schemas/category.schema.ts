@@ -8,6 +8,6 @@ export class Category extends BaseModel {
   @prop()
   description: string;
 
-  @prop({ unique: true })
+  @prop()
   activated: boolean;
 }
