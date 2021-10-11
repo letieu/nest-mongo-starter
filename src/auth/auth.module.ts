@@ -7,10 +7,13 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategy/local.strategy';
 import { jwtConstants } from './auth.const';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { TypegooseModule } from 'nestjs-typegoose';
+import { ResetToken } from './schemas/resetToken.schema';
 
 @Module({
   imports: [
     UserModule,
+    TypegooseModule.forFeature([ResetToken]),
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',

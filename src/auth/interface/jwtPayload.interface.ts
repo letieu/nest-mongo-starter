@@ -1,4 +1,6 @@
+import { ID } from '../../global/interfaces/id.interface';
+
 export interface JwtPayload {
   username: string;
-  id: string;
+  id: ID;
 }

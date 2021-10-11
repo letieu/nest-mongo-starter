@@ -32,6 +32,7 @@
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "crypto": "^1.0.1",
     "mongoose": "^6.0.10",
     "nestjs-typegoose": "^7.1.38",
     "passport": "^0.4.1",

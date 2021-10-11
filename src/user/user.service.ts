@@ -7,6 +7,7 @@ import { ReturnModelType } from '@typegoose/typegoose';
 import { QueryUserDto } from './dtos/query-user.dto';
 import { PaginateResponse } from '../global/interfaces/paginate.interface';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { ID } from '../global/interfaces/id.interface';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,7 @@ export class UserService {
     }
     const count = await this.model.find().merge(findQuery).countDocuments();
     findQuery
+      .select('-password')
       .sort({ [query.sortBy]: query.sortType ?? 'desc' })
       .skip(query.page * query.size)
       .limit(query.size);
@@ -38,8 +40,12 @@ export class UserService {
     };
   }
 
-  async findOne(id: string): Promise<User> {
-    return await this.model.findById(id).exec();
+  async findOne(id: ID): Promise<User> {
+    return await this.model.findById(id, { password: 0 }).exec();
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.model.findOne({ email: email }, { password: 0 }).exec();
   }
 
   async findOneByUsername(username: string): Promise<User | undefined> {
@@ -55,14 +61,19 @@ export class UserService {
     const newUser = new this.model(registerUser);
     newUser.password = await bcrypt.hash(registerUser.password, 10);
 
-    return await newUser.save();
+    const created = await newUser.save();
+    return this.findOne(created.id);
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: ID): Promise<User> {
     return this.model.findByIdAndRemove(id);
   }
 
-  async update(id: string, payload: UpdateUserDto) {
-    return this.model.findByIdAndUpdate(id, payload, { new: true });
+  async update(id: ID, payload: UpdateUserDto) {
+    if (payload.password) {
+      payload.password = await bcrypt.hash(payload.password, 10);
+    }
+    await this.model.findByIdAndUpdate(id, payload, { new: true });
+    return this.findOne(id);
   }
 }
