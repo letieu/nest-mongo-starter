@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProductModule } from './product/product.module';
     AuthModule,
     CategoryModule,
     ProductModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
