@@ -1,22 +1,13 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Request,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { RegisterUserDto } from 'src/user/dtos/register-user.dto';
 import { LoginDto } from 'src/user/dtos/login-user.dto';
-import { User } from 'src/user/schemas/user.schema';
-import MongooseClassSerializerInterceptor from 'src/util/mongooseClassSerializer.interceptor';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtPayload } from './interface/jwtPayload.interface';
+import { Auth } from './decorator/auth.decorator';
 
 @Controller('auth')
-@UseInterceptors(MongooseClassSerializerInterceptor(User))
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
@@ -33,8 +24,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('me')
-  async me(@Request() req: any) {
-    const jwtPayload: JwtPayload = req.user;
-    return await this.service.getUserFromJwtPayload(jwtPayload);
+  async me(@Auth() auth: JwtPayload) {
+    return await this.service.getUserFromJwtPayload(auth);
   }
 }

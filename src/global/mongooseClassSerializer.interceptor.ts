@@ -10,7 +10,7 @@ function MongooseClassSerializerInterceptor(
   classToIntercept: Type,
 ): typeof ClassSerializerInterceptor {
   return class Interceptor extends ClassSerializerInterceptor {
-    private changePlainObjectToClass(document: PlainLiteralObject) {
+    private static changePlainObjectToClass(document: PlainLiteralObject) {
       if (!(document instanceof Document)) {
         return document;
       }
@@ -18,21 +18,21 @@ function MongooseClassSerializerInterceptor(
       return plainToClass(classToIntercept, document.toJSON());
     }
 
-    private prepareResponse(
+    private static prepareResponse(
       response: PlainLiteralObject | PlainLiteralObject[],
     ) {
       if (Array.isArray(response)) {
-        return response.map(this.changePlainObjectToClass);
+        return response.map(Interceptor.changePlainObjectToClass);
       }
 
-      return this.changePlainObjectToClass(response);
+      return Interceptor.changePlainObjectToClass(response);
     }
 
     serialize(
       response: PlainLiteralObject | PlainLiteralObject[],
       options: ClassTransformOptions,
     ) {
-      return super.serialize(this.prepareResponse(response), options);
+      return super.serialize(Interceptor.prepareResponse(response), options);
     }
   };
 }

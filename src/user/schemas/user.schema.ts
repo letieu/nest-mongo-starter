@@ -1,28 +1,22 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude, Transform } from 'class-transformer';
-import { Document } from 'mongoose';
+import { prop } from '@typegoose/typegoose';
+import { Exclude } from 'class-transformer';
+import { BaseModel } from '../../global/base.model';
+import { UserStatusEnum } from '../interfaces/userStatus.enum';
 
-@Schema()
-export class User {
-  @Transform(({ value }) => value.toString())
-  _id: string;
-
-  @Prop({ required: true, unique: true })
+export class User extends BaseModel {
+  @prop()
   username: string;
 
-  @Prop({ required: true })
+  @prop()
   @Exclude()
   password: string;
 
-  @Prop({ required: true, unique: true })
+  @prop()
   email: string;
 
-  @Prop()
-  bio: string;
+  @prop()
+  title: string;
 
-  @Prop()
-  image: string;
+  @prop()
+  status: UserStatusEnum;
 }
-
-export type UserDocument = User & Document;
-export const UserSchema = SchemaFactory.createForClass(User);
