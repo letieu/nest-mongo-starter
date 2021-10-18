@@ -29,7 +29,7 @@ export class ProductService {
         { title: { $regex: '.*' + query.search + '.*', $options: 'i' } },
       ]);
     }
-    if (query.activated) {
+    if ('activated' in query) {
       findQuery.where({ activated: query.activated });
     }
     const count = await this.model.find().merge(findQuery).countDocuments();
@@ -39,7 +39,7 @@ export class ProductService {
       .limit(query.size);
 
     return {
-      items: await findQuery.populate('category', 'title').exec(),
+      items: await findQuery.populate('category').exec(),
       paginate: {
         page: query.page,
         size: query.size,

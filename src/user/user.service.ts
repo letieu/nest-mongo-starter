@@ -23,6 +23,11 @@ export class UserService {
         { title: { $regex: '.*' + query.search + '.*', $options: 'i' } },
       ]);
     }
+
+    if (query.status) {
+      findQuery.where('status', query.status);
+    }
+
     const count = await this.model.find().merge(findQuery).countDocuments();
     findQuery
       .select('-password')

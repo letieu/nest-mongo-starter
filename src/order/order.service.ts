@@ -7,7 +7,6 @@ import { QueryOrderDto } from './dtos/queryOrder.dto';
 import { PaginateResponse } from '../global/interfaces/paginate.interface';
 import { UpdateOrderDto } from './dtos/updateOrder.dto';
 import { ID } from '../global/interfaces/id.interface';
-import { model } from 'mongoose';
 
 @Injectable()
 export class OrderService {
@@ -40,7 +39,7 @@ export class OrderService {
       .limit(query.size);
 
     return {
-      items: await findQuery.exec(),
+      items: await findQuery.populate('createdBy').exec(),
       paginate: {
         page: query.page,
         size: query.size,

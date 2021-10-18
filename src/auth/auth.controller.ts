@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtPayload } from './interface/jwtPayload.interface';
 import { Auth } from './decorator/auth.decorator';
 import { ResetPasswordDto } from '../user/dtos/reset-password.dto';
+import { UpdateUserDto } from 'src/user/dtos/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +29,15 @@ export class AuthController {
   @Post('me')
   async me(@Auth() auth: JwtPayload) {
     return await this.service.getUserFromJwtPayload(auth);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('profile')
+  async updateProfile(
+    @Auth() auth: JwtPayload,
+    @Body() profile: UpdateUserDto,
+  ) {
+    return await this.service.updateProfile(auth.id, profile);
   }
 
   @Post('reset_request')

@@ -2,6 +2,7 @@ import {
   IsArray,
   IsBoolean,
   IsMongoId,
+  IsNumber,
   IsOptional,
   Length,
 } from 'class-validator';
@@ -16,6 +17,10 @@ export class CreateProductDto {
   @Length(4, 30)
   description: string;
 
+  @IsNumber()
+  @Type(() => Number)
+  price: number;
+
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
@@ -28,4 +33,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsArray()
   tags: string[];
+
+  @IsOptional()
+  image: string;
 }

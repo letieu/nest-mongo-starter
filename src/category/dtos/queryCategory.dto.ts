@@ -1,12 +1,14 @@
 import { QueryDto } from '../../global/dtos/query.dto';
 import { CategoryFilter } from '../interfaces/categoryFilter.interface';
-import { IsBoolean, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsBoolean } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class QueryCategoryDto extends QueryDto implements CategoryFilter {
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => {
+    return [true, 'enabled', 'true'].indexOf(value) > -1;
+  })
   activated: boolean;
 
   @IsOptional()

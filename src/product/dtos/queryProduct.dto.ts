@@ -1,13 +1,15 @@
 import { QueryDto } from '../../global/dtos/query.dto';
 import { ProductFilter } from '../interfaces/productFilter.interface';
 import { IsBoolean, IsMongoId, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { ID } from '../../global/interfaces/id.interface';
 
 export class QueryProductDto extends QueryDto implements ProductFilter {
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => {
+    return [true, 'enabled', 'true'].indexOf(value) > -1;
+  })
   activated: boolean;
 
   @IsOptional()

@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ID } from '../global/interfaces/id.interface';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
@@ -12,6 +13,7 @@ import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectModel } from 'nestjs-typegoose';
 import { ResetPasswordDto } from '../user/dtos/reset-password.dto';
 import { ConfigService } from '@nestjs/config';
+import { UpdateUserDto } from 'src/user/dtos/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -104,5 +106,9 @@ export class AuthService {
     });
     await token.deleteOne();
     return true;
+  }
+
+  async updateProfile(id: ID, payload: UpdateUserDto) {
+    return this.usersService.update(id, payload);
   }
 }

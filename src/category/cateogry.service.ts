@@ -23,7 +23,7 @@ export class CateogryService {
         { title: { $regex: '.*' + query.search + '.*', $options: 'i' } },
       ]);
     }
-    if (query.activated) {
+    if ('activated' in query) {
       findQuery.where({ activated: query.activated });
     }
     const count = await this.model.find().merge(findQuery).countDocuments();
